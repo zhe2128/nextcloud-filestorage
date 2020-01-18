@@ -4,5 +4,5 @@
 
     <!-- Annotation-based beans -->
     <context:component-scan base-package="com.github.zhe2128.nextcloudfilestorage"/>
-
+    <bean id="cuba_FileStorage" class="com.github.zhe2128.nextcloudfilestorage.core.NextCloudFileStorage"/>
 </beans>

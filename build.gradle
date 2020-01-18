@@ -16,7 +16,7 @@ buildscript {
     }
 }
 
-def modulePrefix = 'app'
+def modulePrefix = 'nextcloud'
 
 def globalModule = project(":${modulePrefix}-global")
 def coreModule = project(":${modulePrefix}-core")
@@ -75,6 +75,13 @@ configure(globalModule) {
             enabled = true
         }
     }
+
+    jar {
+        manifest {
+            attributes('App-Component-Id': cuba.artifact.group)
+            attributes('App-Component-Version': cuba.artifact.version + (cuba.artifact.isSnapshot ? '-SNAPSHOT' : ''))
+        }
+    }
 }
 
 configure(coreModule) {
@@ -89,6 +96,7 @@ configure(coreModule) {
         compileOnly(servletApi)
         jdbc(hsql)
         testRuntime(hsql)
+        implementation 'com.github.lookfirst:sardine:5.9'
     }
 
     task cleanConf(description: 'Cleans up conf directory') {

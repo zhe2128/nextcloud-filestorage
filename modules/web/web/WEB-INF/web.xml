@@ -10,7 +10,7 @@
         <param-value>
             classpath:com/github/zhe2128/nextcloudfilestorage/web-app.properties
             /WEB-INF/local.app.properties
-            "file:${catalina.base}/conf/app/local.app.properties"
+            "file:${catalina.base}/conf/nextcloud/local.app.properties"
         </param-value>
     </context-param>
     <!--Application components-->
