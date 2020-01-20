@@ -1,2 +1,2 @@
 # nextcloud-filestorage
-CUBA Platfrom component that overrides CUBA Filestorage behavior to using NextCloud
+CUBA Platfrom 7.1.3 component that overrides CUBA Filestorage behavior to using NextCloud
