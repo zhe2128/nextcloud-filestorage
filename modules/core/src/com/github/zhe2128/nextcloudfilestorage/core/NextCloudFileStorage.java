@@ -11,7 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
@@ -30,15 +29,9 @@ public class NextCloudFileStorage implements FileStorageAPI {
     @Override
     public long saveStream(FileDescriptor fileDescr, InputStream inputStream) throws FileStorageException {
         Preconditions.checkNotNullArgument(fileDescr.getSize());
-        Sardine connection = getWebDavConnection();
-        String uploadUrl = getNextCloudUrl() + resolveFileName(fileDescr);
         try {
-            if (connection.exists(uploadUrl)) {
-                throw new FileStorageException(FileStorageException.Type.MORE_THAN_ONE_FILE, fileDescr.getId().toString());
-            }
-            createDirectory(fileDescr, connection);
-            connection.put(uploadUrl, inputStream);
-            connection.shutdown();
+            byte[] data = IOUtils.toByteArray(inputStream);
+            saveFile(fileDescr, data);
         } catch (IOException e) {
             throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, fileDescr.getId().toString(), e);
         }
@@ -48,7 +41,18 @@ public class NextCloudFileStorage implements FileStorageAPI {
     @Override
     public void saveFile(FileDescriptor fileDescr, byte[] data) throws FileStorageException {
         Preconditions.checkNotNullArgument(fileDescr.getSize());
-        saveStream(fileDescr, new ByteArrayInputStream(data));
+        Sardine connection = getWebDavConnection();
+        String uploadUrl = getNextCloudUrl() + resolveFileName(fileDescr);
+        try {
+            if (connection.exists(uploadUrl)) {
+                throw new FileStorageException(FileStorageException.Type.MORE_THAN_ONE_FILE, fileDescr.getId().toString());
+            }
+            createDirectory(fileDescr, connection);
+            connection.put(uploadUrl, data);
+            connection.shutdown();
+        } catch (IOException e) {
+            throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, fileDescr.getId().toString(), e);
+        }
     }
 
     @Override
@@ -113,7 +117,7 @@ public class NextCloudFileStorage implements FileStorageAPI {
             for (String dir : dirsArray) {
                 createdDir.append("/");
                 createdDir.append(dir);
-                String directoryUrl = getNextCloudUrl() + "/" + createdDir.toString();
+                String directoryUrl = getNextCloudUrl() + createdDir.toString();
                 if (!connection.exists(directoryUrl)) {
                     connection.createDirectory(directoryUrl);
                 }
@@ -131,7 +135,7 @@ public class NextCloudFileStorage implements FileStorageAPI {
     protected String getNextCloudUrl() {
         String url = nextCloudConfig.getUrl();
         Preconditions.checkNotEmptyString(url, "Url for NextCloud is required");
-        return (url.lastIndexOf(url.length() - 1) != '/' ? url : url.substring(url.length() - 1))
+        return (url.charAt(url.length() - 1) != '/' ? url : url.substring(0, url.length() - 1))
                 + "/remote.php/dav/files/" + nextCloudConfig.getUsername();
     }
 
