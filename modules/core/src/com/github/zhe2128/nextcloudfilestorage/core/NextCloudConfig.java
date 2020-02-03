@@ -4,7 +4,7 @@ import com.haulmont.cuba.core.config.Config;
 import com.haulmont.cuba.core.config.Property;
 import com.haulmont.cuba.core.config.Source;
 import com.haulmont.cuba.core.config.SourceType;
-import com.haulmont.cuba.core.config.defaults.Default;
+import com.haulmont.cuba.core.config.defaults.DefaultBoolean;
 
 /**
  * Settings for NextCloud file storage integration
@@ -14,17 +14,16 @@ import com.haulmont.cuba.core.config.defaults.Default;
 @Source(type = SourceType.DATABASE)
 public interface NextCloudConfig extends Config {
     /**
-     * @return url NextCloud
+     * @return server name NextCloud
      */
-    @Property("NextCloud.url")
-    String getUrl();
+    @Property("NextCloud.serverName")
+    String getServerName();
 
     /**
-     * @return root directory for application
+     * @return port NextCloud
      */
-    @Property("NextCloud.appName")
-    @Default("App")
-    String getAppName();
+    @Property("NextCloud.port")
+    int getPort();
 
     /**
      * @return username NextCloud
@@ -37,4 +36,8 @@ public interface NextCloudConfig extends Config {
      */
     @Property("NextCloud.password")
     String getPassword();
+
+    @Property("NextCloud.useHTTPS")
+    @DefaultBoolean(false)
+    boolean getUseHTTPS();
 }

@@ -4,5 +4,13 @@
 
     <!-- Annotation-based beans -->
     <context:component-scan base-package="com.github.zhe2128.nextcloudfilestorage"/>
-    <bean id="cuba_FileStorage" class="com.github.zhe2128.nextcloudfilestorage.core.NextCloudFileStorage"/>
+    <bean id="nextcloudfilestorage_MBeanExporter" lazy-init="false"
+          class="com.haulmont.cuba.core.sys.jmx.MBeanExporter">
+        <property name="beans">
+            <map>
+                <entry key="${cuba.webContextName}.nextcloudfilestorage:type=SynchronizationFiles"
+                       value-ref="nextcloudfilestorage_SynchronizationFiles"/>
+            </map>
+        </property>
+    </bean>
 </beans>
