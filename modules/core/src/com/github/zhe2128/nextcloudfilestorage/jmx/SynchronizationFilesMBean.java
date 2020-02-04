@@ -1,5 +1,6 @@
 package com.github.zhe2128.nextcloudfilestorage.jmx;
 
+import com.haulmont.cuba.core.sys.jmx.JmxRunAsync;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedOperationParameter;
 import org.springframework.jmx.export.annotation.ManagedOperationParameters;
@@ -17,6 +18,7 @@ public interface SynchronizationFilesMBean {
      *
      * @return
      */
+    @JmxRunAsync
     @ManagedOperation(description = "Synchronization of all files")
     String syncAllFiles();
 
@@ -26,6 +28,7 @@ public interface SynchronizationFilesMBean {
      * @param year
      * @return
      */
+    @JmxRunAsync
     @ManagedOperation(description = "Synchronization of all files for the year")
     @ManagedOperationParameters({@ManagedOperationParameter(name = "year", description = "value of pattern yyyy")})
     String syncFilesByYear(String year);
@@ -36,6 +39,7 @@ public interface SynchronizationFilesMBean {
      * @param month
      * @return
      */
+    @JmxRunAsync
     @ManagedOperation(description = "Synchronization of all files per month")
     @ManagedOperationParameters({@ManagedOperationParameter(name = "month", description = "value of pattern yyyy-MM")})
     String syncFilesByMonth(String month);
@@ -46,6 +50,7 @@ public interface SynchronizationFilesMBean {
      * @param day
      * @return
      */
+    @JmxRunAsync
     @ManagedOperation(description = "Synchronize all files in a day")
     @ManagedOperationParameters({@ManagedOperationParameter(name = "day", description = "value of pattern yyyy-MM-dd")})
     String syncFilesByDay(String day);
