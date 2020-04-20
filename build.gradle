@@ -97,7 +97,7 @@ configure(coreModule) {
         compileOnly(servletApi)
         jdbc(hsql)
         testRuntime(hsql)
-        compile 'org.aarboard.nextcloud:nextcloud-api:11.0.3'
+        compile 'org.aarboard.nextcloud:nextcloud-api:11.1.0'
     }
 
     task cleanConf(description: 'Cleans up conf directory') {

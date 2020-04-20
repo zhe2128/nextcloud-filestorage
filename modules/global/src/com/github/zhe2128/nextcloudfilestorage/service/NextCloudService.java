@@ -68,4 +68,12 @@ public interface NextCloudService {
      * @return file name
      */
     String getSourceFileName(FileDescriptor fileDescriptor);
+
+    /**
+     * Shared file from file descriptor and return public link
+     *
+     * @param fileDescriptor file descriptor
+     * @return public link
+     */
+    String getSharedLink(FileDescriptor fileDescriptor);
 }

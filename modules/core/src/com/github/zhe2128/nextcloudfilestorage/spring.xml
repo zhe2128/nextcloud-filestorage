@@ -10,6 +10,8 @@
             <map>
                 <entry key="${cuba.webContextName}.nextcloudfilestorage:type=SynchronizationFiles"
                        value-ref="nextcloudfilestorage_SynchronizationFiles"/>
+                <entry key="${cuba.webContextName}.nextcloudfilestorage:type=SharedFiles"
+                       value-ref="nextcloudfilestorage_SharedFiles"/>
             </map>
         </property>
     </bean>

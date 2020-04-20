@@ -3,7 +3,11 @@ package com.github.zhe2128.nextcloudfilestorage.service;
 import com.github.zhe2128.nextcloudfilestorage.core.NextCloudConfig;
 import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.core.entity.FileDescriptor;
+import org.aarboard.nextcloud.api.NextcloudConnector;
 import org.aarboard.nextcloud.api.ServerConfig;
+import org.aarboard.nextcloud.api.filesharing.Share;
+import org.aarboard.nextcloud.api.filesharing.SharePermissions;
+import org.aarboard.nextcloud.api.filesharing.ShareType;
 import org.aarboard.nextcloud.api.webdav.Files;
 import org.aarboard.nextcloud.api.webdav.Folders;
 import org.apache.commons.lang3.StringUtils;
@@ -141,4 +145,16 @@ public class NextCloudServiceBean implements NextCloudService {
         return getStorageDir(fileDescriptor.getCreateDate()) + "/" + getFileName(fileDescriptor);
     }
 
+    @Override
+    public String getSharedLink(FileDescriptor fileDescriptor) {
+        NextcloudConnector nextcloudConnector = new NextcloudConnector(nextCloudConfig.getServerName(),
+                nextCloudConfig.getUseHTTPS(),
+                nextCloudConfig.getPort(),
+                nextCloudConfig.getUsername(),
+                nextCloudConfig.getPassword());
+        Share share = nextcloudConnector.doShare(resolveFileName(fileDescriptor), ShareType.PUBLIC_LINK,
+                null, false, null,
+                new SharePermissions(SharePermissions.SingleRight.READ));
+        return share.getUrl();
+    }
 }
