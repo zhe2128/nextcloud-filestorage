@@ -27,7 +27,7 @@ public class SharedFiles implements SharedFilesMBean {
                 .parameter("id", UUID.fromString(id))
                 .one();
         if (fileDescriptors != null) {
-            return nextCloudService.getSharedLink(fileDescriptors) + "/preview";
+            return nextCloudService.getSharedLink(fileDescriptors);
         } else {
             return "File not found with id " + id;
         }

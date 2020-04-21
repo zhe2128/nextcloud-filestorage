@@ -155,6 +155,6 @@ public class NextCloudServiceBean implements NextCloudService {
         Share share = nextcloudConnector.doShare(resolveFileName(fileDescriptor), ShareType.PUBLIC_LINK,
                 null, false, null,
                 new SharePermissions(SharePermissions.SingleRight.READ));
-        return share.getUrl();
+        return share.getUrl() + "/preview";
     }
 }
