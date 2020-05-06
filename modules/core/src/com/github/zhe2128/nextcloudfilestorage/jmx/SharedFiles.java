@@ -1,6 +1,7 @@
 package com.github.zhe2128.nextcloudfilestorage.jmx;
 
 import com.github.zhe2128.nextcloudfilestorage.service.NextCloudService;
+import com.github.zhe2128.nextcloudfilestorage.util.FileInfo;
 import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.core.entity.FileDescriptor;
 import com.haulmont.cuba.core.global.DataManager;
@@ -31,5 +32,12 @@ public class SharedFiles implements SharedFilesMBean {
         } else {
             return "File not found with id " + id;
         }
+    }
+
+    @Authenticated
+    @Override
+    public String uploadFile(String name, String extension, String base64encoded, boolean needShare) {
+        FileInfo fileInfo = nextCloudService.uploadFile(name, extension, base64encoded, needShare);
+        return "fileDescriptors: " + fileInfo.getId() + ", previewUrl: " + fileInfo.getPreviewUrl();
     }
 }

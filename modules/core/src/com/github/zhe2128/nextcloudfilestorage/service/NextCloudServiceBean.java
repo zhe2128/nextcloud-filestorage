@@ -1,8 +1,13 @@
 package com.github.zhe2128.nextcloudfilestorage.service;
 
 import com.github.zhe2128.nextcloudfilestorage.core.NextCloudConfig;
+import com.github.zhe2128.nextcloudfilestorage.util.FileInfo;
 import com.haulmont.bali.util.Preconditions;
 import com.haulmont.cuba.core.entity.FileDescriptor;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.FileLoader;
+import com.haulmont.cuba.core.global.FileStorageException;
+import com.haulmont.cuba.core.global.Metadata;
 import org.aarboard.nextcloud.api.NextcloudConnector;
 import org.aarboard.nextcloud.api.ServerConfig;
 import org.aarboard.nextcloud.api.filesharing.Share;
@@ -14,10 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,6 +33,12 @@ import java.util.Date;
 public class NextCloudServiceBean implements NextCloudService {
     @Inject
     protected NextCloudConfig nextCloudConfig;
+    @Inject
+    protected FileLoader fileLoader;
+    @Inject
+    private DataManager dataManager;
+    @Inject
+    private Metadata metadata;
 
     /**
      * Create subfolders
@@ -156,5 +165,30 @@ public class NextCloudServiceBean implements NextCloudService {
                 null, false, null,
                 new SharePermissions(SharePermissions.SingleRight.READ));
         return share.getUrl() + "/preview";
+
+    }
+
+    @Override
+    public FileInfo uploadFile(String name, String extension, String base64encoded, boolean needShare) {
+        FileInfo fileInfo = new FileInfo();
+        Base64.Decoder dec = Base64.getDecoder();
+        byte[] bytes = dec.decode(base64encoded);
+        FileDescriptor fileDescriptor = metadata.create(FileDescriptor.class);
+        fileDescriptor.setName(name);
+        fileDescriptor.setExtension(extension);
+        fileDescriptor.setSize((long) bytes.length);
+        fileDescriptor.setCreateDate(new Date());
+        try {
+            fileLoader.saveStream(fileDescriptor, () -> new ByteArrayInputStream(bytes));
+            dataManager.commit(fileDescriptor);
+        } catch (FileStorageException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (needShare) {
+            fileInfo.setPreviewUrl(getSharedLink(fileDescriptor));
+        }
+        fileInfo.setId(fileDescriptor.getId());
+        return fileInfo;
     }
 }

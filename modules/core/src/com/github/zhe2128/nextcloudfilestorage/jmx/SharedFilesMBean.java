@@ -20,4 +20,17 @@ public interface SharedFilesMBean {
     @ManagedOperation(description = "Shared file by id")
     @ManagedOperationParameters({@ManagedOperationParameter(name = "id", description = "file id")})
     String sharedFileById(String id);
+
+    /**
+     * Upload file
+     *
+     * @return public link
+     */
+    @JmxRunAsync
+    @ManagedOperation(description = "public file")
+    @ManagedOperationParameters({@ManagedOperationParameter(name = "name", description = "file name"),
+            @ManagedOperationParameter(name = "extension", description = "file extension"),
+            @ManagedOperationParameter(name = "base64encoded", description = "file base64encoded"),
+            @ManagedOperationParameter(name = "needShare", description = "file needShare")})
+    String uploadFile(String name, String extension, String base64encoded, boolean needShare);
 }

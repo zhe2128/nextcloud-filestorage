@@ -1,5 +1,6 @@
 package com.github.zhe2128.nextcloudfilestorage.service;
 
+import com.github.zhe2128.nextcloudfilestorage.util.FileInfo;
 import com.haulmont.cuba.core.entity.FileDescriptor;
 import org.aarboard.nextcloud.api.ServerConfig;
 
@@ -76,4 +77,15 @@ public interface NextCloudService {
      * @return public link
      */
     String getSharedLink(FileDescriptor fileDescriptor);
+
+    /**
+     * Upload file from string base64 encoded
+     *
+     * @param name          file name
+     * @param extension     file extension
+     * @param base64encoded byte base64 encoded
+     * @param needShare     need share file
+     * @return
+     */
+    FileInfo uploadFile(String name, String extension, String base64encoded, boolean needShare);
 }
