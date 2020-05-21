@@ -74,9 +74,29 @@ public interface NextCloudService {
      * Shared file from file descriptor and return public link
      *
      * @param fileDescriptor file descriptor
+     * @param width          width image
+     * @param height         height image
      * @return public link
      */
-    String getSharedLink(FileDescriptor fileDescriptor);
+    String getSharedLink(FileDescriptor fileDescriptor, Integer width, Integer height);
+
+    /**
+     * Shared file from file descriptor and return public link
+     *
+     * @param fileDescriptor file descriptor
+     * @param width          width image
+     * @return public link
+     */
+    String getSharedLinkW(FileDescriptor fileDescriptor, Integer width);
+
+    /**
+     * Shared file from file descriptor and return public link
+     *
+     * @param fileDescriptor file descriptor
+     * @param height         height image
+     * @return public link
+     */
+    String getSharedLinkH(FileDescriptor fileDescriptor, Integer height);
 
     /**
      * Upload file from string base64 encoded
@@ -85,7 +105,9 @@ public interface NextCloudService {
      * @param extension     file extension
      * @param base64encoded byte base64 encoded
      * @param needShare     need share file
+     * @param width         width image
+     * @param height        height image
      * @return
      */
-    FileInfo uploadFile(String name, String extension, String base64encoded, boolean needShare);
+    FileInfo uploadFile(String name, String extension, String base64encoded, boolean needShare, Integer width, Integer height);
 }

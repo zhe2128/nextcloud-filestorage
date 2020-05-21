@@ -31,6 +31,8 @@ public interface SharedFilesMBean {
     @ManagedOperationParameters({@ManagedOperationParameter(name = "name", description = "file name"),
             @ManagedOperationParameter(name = "extension", description = "file extension"),
             @ManagedOperationParameter(name = "base64encoded", description = "file base64encoded"),
-            @ManagedOperationParameter(name = "needShare", description = "file needShare")})
-    String uploadFile(String name, String extension, String base64encoded, boolean needShare);
+            @ManagedOperationParameter(name = "needShare", description = "file needShare"),
+            @ManagedOperationParameter(name = "width", description = "width image"),
+            @ManagedOperationParameter(name = "height", description = "height image")})
+    String uploadFile(String name, String extension, String base64encoded, boolean needShare, Integer width, Integer height);
 }

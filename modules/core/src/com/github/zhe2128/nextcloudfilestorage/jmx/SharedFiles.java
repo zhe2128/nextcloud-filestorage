@@ -28,7 +28,7 @@ public class SharedFiles implements SharedFilesMBean {
                 .parameter("id", UUID.fromString(id))
                 .one();
         if (fileDescriptors != null) {
-            return nextCloudService.getSharedLink(fileDescriptors);
+            return nextCloudService.getSharedLink(fileDescriptors, null, null);
         } else {
             return "File not found with id " + id;
         }
@@ -36,8 +36,8 @@ public class SharedFiles implements SharedFilesMBean {
 
     @Authenticated
     @Override
-    public String uploadFile(String name, String extension, String base64encoded, boolean needShare) {
-        FileInfo fileInfo = nextCloudService.uploadFile(name, extension, base64encoded, needShare);
+    public String uploadFile(String name, String extension, String base64encoded, boolean needShare, Integer width, Integer height) {
+        FileInfo fileInfo = nextCloudService.uploadFile(name, extension, base64encoded, needShare, width, height);
         return "fileDescriptors: " + fileInfo.getId() + ", previewUrl: " + fileInfo.getPreviewUrl();
     }
 }

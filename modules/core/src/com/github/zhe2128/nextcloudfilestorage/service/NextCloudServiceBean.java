@@ -144,6 +144,16 @@ public class NextCloudServiceBean implements NextCloudService {
         return fileDescriptor.getName();
     }
 
+    @Override
+    public String getSharedLinkW(FileDescriptor fileDescriptor, Integer width) {
+        return getSharedLink(fileDescriptor, width, null);
+    }
+
+    @Override
+    public String getSharedLinkH(FileDescriptor fileDescriptor, Integer height) {
+        return getSharedLink(fileDescriptor, null, height);
+    }
+
     /**
      * Get the path to file
      *
@@ -155,7 +165,7 @@ public class NextCloudServiceBean implements NextCloudService {
     }
 
     @Override
-    public String getSharedLink(FileDescriptor fileDescriptor) {
+    public String getSharedLink(FileDescriptor fileDescriptor, Integer width, Integer height) {
         NextcloudConnector nextcloudConnector = new NextcloudConnector(nextCloudConfig.getServerName(),
                 nextCloudConfig.getUseHTTPS(),
                 nextCloudConfig.getPort(),
@@ -164,12 +174,22 @@ public class NextCloudServiceBean implements NextCloudService {
         Share share = nextcloudConnector.doShare(resolveFileName(fileDescriptor), ShareType.PUBLIC_LINK,
                 null, false, null,
                 new SharePermissions(SharePermissions.SingleRight.READ));
-        return share.getUrl() + "/preview";
+        String url = (nextCloudConfig.getUseHTTPS() ? "https://" : "http://");
+        url += nextCloudConfig.getServerName() + ":" + nextCloudConfig.getPort();
+        url += "/apps/files_sharing/publicpreview/" + share.getToken() + "?file=" + share.getFileTarget();
+        if (width != null && height != null) {
+            url += "&a=true&x=" + width + "&y=" + height;
+        } else if (width != null) {
+            url += "&a=false&x=" + width;
+        } else if (height != null) {
+            url += "&a=false&y=" + height;
+        }
+        return url;
 
     }
 
     @Override
-    public FileInfo uploadFile(String name, String extension, String base64encoded, boolean needShare) {
+    public FileInfo uploadFile(String name, String extension, String base64encoded, boolean needShare, Integer width, Integer height) {
         FileInfo fileInfo = new FileInfo();
         Base64.Decoder dec = Base64.getDecoder();
         byte[] bytes = dec.decode(base64encoded);
@@ -186,7 +206,7 @@ public class NextCloudServiceBean implements NextCloudService {
             return null;
         }
         if (needShare) {
-            fileInfo.setPreviewUrl(getSharedLink(fileDescriptor));
+            fileInfo.setPreviewUrl(getSharedLink(fileDescriptor, width, height));
         }
         fileInfo.setId(fileDescriptor.getId());
         return fileInfo;
